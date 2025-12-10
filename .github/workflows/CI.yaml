@@ -21,6 +21,8 @@ jobs:
         run: uv sync --all-extras --dev
       - name: Run Linter (Ruff)
         run: uv run ruff check .
+      - name: Fix auto-fixable
+        run: uv run ruff check --fix .
 
   # Job 2: Formatter
   check-formatter:
@@ -34,6 +36,8 @@ jobs:
         run: uv python install
       - name: Install dependencies
         run: uv sync --all-extras --dev
+      - name: Format all the python code in the repository
+        run: uv run ruff format .
       - name: Run Formatter Check (Ruff)
         run: uv run ruff format --check .
 
