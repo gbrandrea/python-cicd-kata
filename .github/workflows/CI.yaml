@@ -1,0 +1,70 @@
+name: Code Safety
+run-name: ${{ github.workflow }} - PR #${{ github.event.pull_request.number }}
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Job 1: Linter
+  check-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        run: uv python install
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Run Linter (Ruff)
+        run: uv run ruff check .
+
+  # Job 2: Formatter
+  check-formatter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        run: uv python install
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Run Formatter Check (Ruff)
+        run: uv run ruff format --check .
+
+  # Job 3: Type Safety
+  check-type-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        run: uv python install
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Run Static Type Checker (Pyright)
+        run: uv run pyright
+
+  # Job 4: Unit Tests
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+      - name: Install the project
+        run: uv sync --all-extras --dev
+      - name: Run Unit Tests
+        run: uv run pytest
