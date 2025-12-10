@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from app.application.get_dice_roll import get_dice_roll
-//cambio para probar todo
 
 def create_app() -> FastAPI:
     app = FastAPI()
